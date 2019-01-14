@@ -1,3 +1,24 @@
+//! dlarm is the alarm system for [dwm](https://dwm.suckless.org/).  
+//!
+//! Like dwm, dlarm is minimalist, keyboard-focused, and terminal centric.  All dlarm does is to allow you to set an alarm for a specified time later today.  When that alarm goes off, your dwm status bar will flash with either a string you specify or the text `ALARM ALARM ALARM`.  You can then turn off or snooze the alarm.
+//!
+//! # Usage Example
+//!
+//! ```bash
+//! $ dlarm --set "3:30pm" --message "Meeting"
+//! Alarm set for 03:30pm
+//!
+//! $ dlarm --off
+//!
+//! $ dlarm -s "2:20"
+//! Alarm set for 02:20pm
+//!
+//! $ dlarm -z
+//! Alarm snoozed for 5 minutes.
+//! Zzz…
+//! Alarm now set for 02:25pm
+//! ```
+
 mod cli;
 mod data_file;
 mod error_types;
