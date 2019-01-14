@@ -1,9 +1,11 @@
+use crate::cli;
+use clap::crate_authors;
 use man::prelude::*;
+
 pub fn generate_man_page() {
-    let msg = Manual::new("auth-service")
-        .about("authorize & authenticate members")
-        .arg(Arg::new("path"))
-        .env(Env::new("PORT").help("The network port to listen to"))
+    let cli::CliText { message, set, app } = cli::CliText::new();
+    let msg = Manual::new(app.name)
+        .about(app.description)
         .flag(
             Flag::new()
                 .short("-h")
@@ -16,19 +18,19 @@ pub fn generate_man_page() {
                 .long("--version")
                 .help("Prints version information."),
         )
-        .flag(
-            Flag::new()
-                .short("-v")
-                .long("--verbosity")
-                .help("Pass multiple times to print more information."),
+        .option(
+            Opt::new(message.long)
+                .short(&format!("-{}", message.short))
+                .long(&format!("--{}", message.long))
+                .help(message.help),
         )
         .option(
-            Opt::new("port")
-                .short("-p")
-                .long("--port")
-                .help("The network port to listen to."),
+            Opt::new(set.long)
+                .short(&format!("-{}", set.short))
+                .long(&format!("--{}", set.long))
+                .help(set.help),
         )
-        .author(Author::new("Alice Person").email("alice@person.com"))
+        .author(Author::new(crate_authors!()))
         .render();
     println!("{}", msg);
 }
