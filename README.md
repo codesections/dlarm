@@ -6,7 +6,7 @@ Like dwm, dlarm is minimalist, keyboard-focused, and terminal centric.  All dlar
 
 It looks like this:
 
-[Gif depicting dlarm alarm sounding](./dlarm.gif)
+![Gif depicting dlarm alarm sounding](./dlarm.gif)
 
 # Installation prerequisites
 
