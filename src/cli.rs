@@ -46,7 +46,7 @@ pub fn build_cli() -> App<'static, 'static> {
                 .arg(
                     Arg::with_name("target")
                         .required(true)
-                        .possible_values(&["bash", "fish", "zsh", "man"])
+                        .possible_values(&["bash", "fish", "zsh", "elvish", "man"])
                         .help("The shell to generate the script for, or man to generate the man(1) page"),
                 ),
         )

@@ -1,11 +1,16 @@
 [package]
 name = "dlarm"
+description = "the alarm system for dwm"
 version = "0.1.0"
 authors = ["Daniel Sockwell <dsockwell@gmail.com>"]
 edition = "2018"
+license = "MIT"
+keywords = ["CLI", "alarm", "productivity", "time", "time-management"]
+readme = "./README.md"
+categories = ["command-line-utilities", "date-and-time"]
 
 [dependencies]
-clap = {version = "2.32"}
+clap = "2.32"
 chrono = "0.4.6"
 dirs = "1.0.4"
 man = "0.1.1"
