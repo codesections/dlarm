@@ -10,13 +10,13 @@ It looks like this:
 
 # Installation prerequisites
 
-###dwm
+### dwm
 dlarm requires dwm.  If you do not already have it installed, you can install it from [dwm.suckless.org](https://dwm.suckless.org/).  If you would like dlarm to support a different minimalist widow manager, please open an issue and let me know.
 
-###dwm-statuscolors (optional)
+### dwm-statuscolors (optional)
 dlarm works best with the dwm-statuscolors patch applied.  This patch allows color output in dwm's status bar; without this patch, dlarm will still function but will not have any colors.  If you do not already have this patch, you can install it from [dwm.suckless.org/patches/statuscolors](https://dwm.suckless.org/patches/statuscolors/).
 
-###rust
+### Rust
 At the moment, dlarm requires the Rust tool chain to be installed on your system.  If you would like a pre-compiled binary, please open an issue and let me know your target architecture.
 
 # Installation Instructions
