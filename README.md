@@ -30,7 +30,7 @@ Clone this repository and run `sudo make install` to automatically install the m
 ### Install other shell completions (optional)
 If you use a different shell, you can generate the completion script for your shell with the generate command (e.g., `dlarm generate bash`).  You may also use this command to generate the man page if you prefer.  dlarm supports bash, elvish, fish, and zsh completions.
 
-### Edit your .xinitrc or other file to enable .dlarm
+### Edit your .xinitrc or other file to enable dlarm
 Finally, edit whatever file contains the script that sets your dwm status bar.  Typically, this is `.xinitrc` or some other init script.  It should contain some sort of script on an infinite loop that updates your dwm status bar info (for example, with a clock).  
 
 Once you have located that script, paste in the appropriate script from the dlarm repository.  If you use dwm-statuscolors, then you should use `script_for_color.sh`; if not, you should use `script_without_color.sh`.  As indicated in those files, you should move the pre-existing script into the `else` block in the new script—that way, the alarm will be displayed when it is triggered, and your normal status info will be displayed at every other time.
