@@ -57,6 +57,7 @@ pub fn main() {
 #[cfg(test)]
 mod tests {
     use assert_cmd::prelude::*;
+    use colored::*;
     use std::process::Command;
     #[test]
     fn it_turns_off_the_alarm() {
@@ -75,20 +76,20 @@ mod tests {
             .arg("-s 3:30pm")
             .assert()
             .success()
-            .stdout("Alarm set for 03:30pm\n");
+            .stdout(format!("Alarm set for {}\n", "03:30pm".blue()));
         Command::main_binary()
             .unwrap()
             .arg("--set=3:30pm")
             .assert()
             .success()
-            .stdout("Alarm set for 03:30pm\n");
+            .stdout(format!("Alarm set for {}\n", "03:30pm".blue()));
         Command::main_binary()
             .unwrap()
             .arg("--set")
             .arg("3:30pm")
             .assert()
             .success()
-            .stdout("Alarm set for 03:30pm\n");
+            .stdout(format!("Alarm set for {}\n", "03:30pm".blue()));
     }
 
     #[test]
@@ -102,40 +103,40 @@ mod tests {
                 .arg("-s 9:00")
                 .assert()
                 .success()
-                .stdout("Alarm set for 09:00am\n");
+                .stdout(format!("Alarm set for {}\n", "09:00am".blue()));
             Command::main_binary()
                 .unwrap()
                 .arg("--set=9:00")
                 .assert()
                 .success()
-                .stdout("Alarm set for 09:00am\n");
+                .stdout(format!("Alarm set for {}\n", "09:00am".blue()));
             Command::main_binary()
                 .unwrap()
                 .arg("--set")
                 .arg("9:00")
                 .assert()
                 .success()
-                .stdout("Alarm set for 09:00am\n");
+                .stdout(format!("Alarm set for {}\n", "09:00am".blue()));
         } else {
             Command::main_binary()
                 .unwrap()
                 .arg("-s 9:00")
                 .assert()
                 .success()
-                .stdout("Alarm set for 09:00pm\n");
+                .stdout(format!("Alarm set for {}\n", "09:00pm".blue()));
             Command::main_binary()
                 .unwrap()
                 .arg("--set=9:00")
                 .assert()
                 .success()
-                .stdout("Alarm set for 09:00pm\n");
+                .stdout(format!("Alarm set for {}\n", "09:00pm".blue()));
             Command::main_binary()
                 .unwrap()
                 .arg("--set")
                 .arg("9:00")
                 .assert()
                 .success()
-                .stdout("Alarm set for 09:00pm\n");
+                .stdout(format!("Alarm set for {}\n", "09:00pm".blue()));
         }
     }
 

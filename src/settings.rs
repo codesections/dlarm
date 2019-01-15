@@ -2,6 +2,7 @@ use crate::error_types::{error, Error::*};
 use chrono::prelude::*;
 use chrono::{Duration, Local, NaiveTime};
 use clap::value_t;
+use colored::*;
 use std::process;
 
 pub struct AlarmSettings {
@@ -53,7 +54,7 @@ impl AlarmSettings {
         let local = Local::today().and_time(time).unwrap();
         let (timestamp, human_time) = (local.timestamp(), local.format("%I:%M%P"));
         self.time = timestamp.to_string();
-        println!("Alarm set for {}", human_time);
+        println!("Alarm set for {}", human_time.to_string().blue());
 
         fn guess_at_am_or_pm_period(usr_input: &str) -> NaiveTime {
             let mut hours: String = usr_input.chars().filter(|c| c.is_numeric()).collect();
@@ -99,8 +100,10 @@ impl AlarmSettings {
         let local = new_time - Duration::hours(timezone_offset_in_hours as i64);
         let human_time = local.format("%I:%M%P");
         println!(
-            "Alarm snoozed for {} minutes.\nZzz…\nAlarm now set for {}",
-            snooze_duration, human_time
+            "Alarm snoozed for {} minutes.\nZzz… {}\nAlarm now set for {}",
+            snooze_duration,
+            "Zzz…".dimmed(),
+            human_time.to_string().blue()
         );
     }
 }
