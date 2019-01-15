@@ -64,7 +64,7 @@ impl AlarmSettings {
             }
             hours.truncate(hours.len() - 2);
             let (hours, current_time): (u32, _) = (hours.parse().unwrap(), Local::now().hour());
-            let period = if hours > current_time { "am" } else { "pm" };
+            let period = if hours >= current_time { "am" } else { "pm" };
             let mut modified_usr_input = String::from(usr_input);
             modified_usr_input.push_str(period);
             let modified_usr_input = &modified_usr_input[..];

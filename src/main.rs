@@ -44,7 +44,7 @@ pub fn main() {
                 );
             }
         }
-        (_, _) => (), // for brevity
+        (_, _) => (),
     }
     let data_file = DataFile::new(r".dlarm.rc");
     let alarm_settings_string = data_file.read_to_string();
@@ -97,7 +97,7 @@ mod tests {
         use chrono::prelude::*;
         use chrono::Local;
         Local::now().hour();
-        if Local::now().hour() < 9 {
+        if Local::now().hour() <= 9 {
             Command::main_binary()
                 .unwrap()
                 .arg("-s 9:00")
