@@ -53,3 +53,132 @@ pub fn main() {
     alarm_settings.update_based_on(cli_arguments);
     data_file.write_to_data_file(&alarm_settings);
 }
+
+#[cfg(test)]
+mod tests {
+    use assert_cmd::prelude::*;
+    use std::process::Command;
+    #[test]
+    fn it_turns_off_the_alarm() {
+        Command::main_binary().unwrap().arg("-o").assert().success();
+        Command::main_binary()
+            .unwrap()
+            .arg("--off")
+            .assert()
+            .success();
+    }
+
+    #[test]
+    fn it_sets_the_alarm() {
+        Command::main_binary()
+            .unwrap()
+            .arg("-s 3:30pm")
+            .assert()
+            .success()
+            .stdout("Alarm set for 03:30pm\n");
+        Command::main_binary()
+            .unwrap()
+            .arg("--set=3:30pm")
+            .assert()
+            .success()
+            .stdout("Alarm set for 03:30pm\n");
+        Command::main_binary()
+            .unwrap()
+            .arg("--set")
+            .arg("3:30pm")
+            .assert()
+            .success()
+            .stdout("Alarm set for 03:30pm\n");
+    }
+
+    #[test]
+    fn it_guesses_the_period_when_setting_the_alarm() {
+        use chrono::prelude::*;
+        use chrono::Local;
+        Local::now().hour();
+        if Local::now().hour() < 9 {
+            Command::main_binary()
+                .unwrap()
+                .arg("-s 9:00")
+                .assert()
+                .success()
+                .stdout("Alarm set for 09:00am\n");
+            Command::main_binary()
+                .unwrap()
+                .arg("--set=9:00")
+                .assert()
+                .success()
+                .stdout("Alarm set for 09:00am\n");
+            Command::main_binary()
+                .unwrap()
+                .arg("--set")
+                .arg("9:00")
+                .assert()
+                .success()
+                .stdout("Alarm set for 09:00am\n");
+        } else {
+            Command::main_binary()
+                .unwrap()
+                .arg("-s 9:00")
+                .assert()
+                .success()
+                .stdout("Alarm set for 09:00pm\n");
+            Command::main_binary()
+                .unwrap()
+                .arg("--set=9:00")
+                .assert()
+                .success()
+                .stdout("Alarm set for 09:00pm\n");
+            Command::main_binary()
+                .unwrap()
+                .arg("--set")
+                .arg("9:00")
+                .assert()
+                .success()
+                .stdout("Alarm set for 09:00pm\n");
+        }
+    }
+
+    #[test]
+    fn it_should_snooze_the_alarm() {
+        use predicates::prelude::*;
+        Command::main_binary()
+            .unwrap()
+            .arg("-z")
+            .assert()
+            .success()
+            .stdout(predicate::str::starts_with("Alarm snoozed for 5 minutes."));
+        Command::main_binary()
+            .unwrap()
+            .arg("--snooze")
+            .assert()
+            .success()
+            .stdout(predicate::str::starts_with("Alarm snoozed for 5 minutes."));
+    }
+
+    #[test]
+    fn it_should_snooze_the_alarm_for_custom_time() {
+        use predicates::prelude::*;
+        Command::main_binary()
+            .unwrap()
+            .arg("-z")
+            .arg("12")
+            .assert()
+            .success()
+            .stdout(predicate::str::starts_with("Alarm snoozed for 12 minutes."));
+        Command::main_binary()
+            .unwrap()
+            .arg("--snooze=99")
+            .assert()
+            .success()
+            .stdout(predicate::str::starts_with("Alarm snoozed for 99 minutes."));
+        Command::main_binary()
+            .unwrap()
+            .arg("--snooze")
+            .arg("23")
+            .assert()
+            .success()
+            .stdout(predicate::str::starts_with("Alarm snoozed for 23 minutes."));
+    }
+
+}
