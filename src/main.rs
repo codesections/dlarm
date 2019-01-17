@@ -26,7 +26,6 @@ mod man;
 mod settings;
 use crate::data_file::DataFile;
 use crate::settings::AlarmSettings;
-use dirs;
 use std::io;
 
 pub fn main() {
@@ -44,14 +43,16 @@ pub fn main() {
                 );
             }
         }
-        (_, _) => (),
-    }
-    let data_file = DataFile::new(r".dlarm.rc");
-    let alarm_settings_string = data_file.read_to_string();
-    let mut alarm_settings = AlarmSettings::from_string(&alarm_settings_string);
+        // No subcommand; process primary command
+        (_, _) => {
+            let data_file = DataFile::new(r".dlarm.rc");
+            let alarm_settings_string = data_file.read_to_string();
+            let mut alarm_settings = AlarmSettings::from_string(&alarm_settings_string);
 
-    alarm_settings.update_based_on(cli_arguments);
-    data_file.write_to_data_file(&alarm_settings);
+            alarm_settings.update_based_on(cli_arguments);
+            data_file.write_to_data_file(&alarm_settings);
+        }
+    }
 }
 
 #[cfg(test)]
