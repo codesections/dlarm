@@ -95,7 +95,7 @@ impl CliText {
                 name: "set",
                 long: "--set",
                 short: "-s",
-                help: "Sets a new alarm for <TIME>, e.g., 3:35pm",
+                help: "Sets a new alarm for <TIME> (like 3:35pm or +25min)",
                 value_name: "TIME",
                 default_value: "",
             },
