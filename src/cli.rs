@@ -1,44 +1,50 @@
 use clap::{crate_authors, crate_version, App, Arg, ArgGroup, SubCommand};
 pub fn build_cli() -> App<'static, 'static> {
-    let CliText { message, set, app } = CliText::new();
+    let CliText {
+        message,
+        set,
+        off,
+        app,
+        snooze,
+    } = CliText::new();
     App::new(app.name)
         .version(crate_version!())
         .author(crate_authors!())
         .about(app.description)
         .arg(
-            Arg::with_name(set.long)
+            Arg::with_name(set.name)
                 .short(set.short)
                 .long(set.long)
                 .help(set.help)
                 .takes_value(true)
-                .value_name("TIME"),
+                .value_name(set.value_name),
         )
         .arg(
-            Arg::with_name("off")
-                .short("o")
-                .long("off")
-                .help("Turns off the currently active alarm"),
+            Arg::with_name(off.name)
+                .short(off.short)
+                .long(off.long)
+                .help(off.help),
         )
         .arg(
-            Arg::with_name("snooze")
-                .short("z")
-                .long("snooze")
-                .help("Snoozes the alarm for <MIN> minutes [default: 5]")
+            Arg::with_name(snooze.name)
+                .short(snooze.short)
+                .long(snooze.long)
+                .help(snooze.help)
                 .takes_value(true)
-                .value_name("MIN")
+                .value_name(snooze.value_name)
                 .hide_possible_values(true)
                 .min_values(0)
                 .max_values(1),
         )
         .group(ArgGroup::with_name("setting the alarm").args(&["set", "off", "snooze"]))
         .arg(
-            Arg::with_name(message.long)
+            Arg::with_name(message.name)
                 .short(message.short)
                 .long(message.long)
                 .help(message.help)
                 .takes_value(true)
-                .value_name("MSG")
-                .default_value("ALARM ALARM ALARM"),
+                .value_name(message.value_name)
+                .default_value(message.default_value),
         )
         .subcommand(
             SubCommand::with_name("generate")
@@ -53,9 +59,18 @@ pub fn build_cli() -> App<'static, 'static> {
 }
 
 pub struct Argument {
+    pub name: &'static str,
     pub long: &'static str,
     pub short: &'static str,
     pub help: &'static str,
+}
+pub struct Option {
+    pub name: &'static str,
+    pub long: &'static str,
+    pub short: &'static str,
+    pub help: &'static str,
+    pub value_name: &'static str,
+    pub default_value: &'static str,
 }
 pub struct HeaderInfo {
     pub name: &'static str,
@@ -63,8 +78,10 @@ pub struct HeaderInfo {
 }
 pub struct CliText {
     pub app: HeaderInfo,
-    pub message: Argument,
-    pub set: Argument,
+    pub set: Option,
+    pub off: Argument,
+    pub snooze: Option,
+    pub message: Option,
 }
 
 impl CliText {
@@ -74,15 +91,35 @@ impl CliText {
                 name: "dlarm",
                 description: "Sets an alarm to be displayed by dwm",
             },
-            message: Argument {
-                long: "message",
-                short: "m",
-                help: "Sets the alarm message.",
-            },
-            set: Argument {
-                long: "set",
-                short: "s",
+            set: Option {
+                name: "set",
+                long: "--set",
+                short: "-s",
                 help: "Sets a new alarm for <TIME>, e.g., 3:35pm",
+                value_name: "TIME",
+                default_value: "",
+            },
+            off: Argument {
+                name: "off",
+                long: "--off",
+                short: "-o",
+                help: "Turns off the currently active alarm",
+            },
+            snooze: Option {
+                name: "snooze",
+                long: "--snooze",
+                short: "-z",
+                help: "Snoozes the alarm for <MIN> minutes [default: 5]",
+                value_name: "MIN",
+                default_value: "",
+            },
+            message: Option {
+                name: "message",
+                long: "--message",
+                short: "-m",
+                help: "Sets the alarm message.",
+                value_name: "MSG",
+                default_value: "ALARM ALARM ALARM",
             },
         }
     }

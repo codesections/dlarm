@@ -46,35 +46,18 @@ impl AlarmSettings {
     }
 
     fn set_alarm_time(&mut self, usr_input: &str) {
-        let time = if let Ok(time_with_am_pm) = NaiveTime::parse_from_str(usr_input, "%I:%M%p") {
-            time_with_am_pm
+        let time;
+        if let Ok(time_with_am_pm) = NaiveTime::parse_from_str(usr_input, "%I:%M%p") {
+            time = time_with_am_pm;
+        } else if usr_input.starts_with("+") {
+            time = parse_relative_time(&usr_input);
         } else {
-            guess_at_am_or_pm_period(&usr_input)
+            time = guess_at_am_or_pm_period(&usr_input);
         };
         let local = Local::today().and_time(time).unwrap();
         let (timestamp, human_time) = (local.timestamp(), local.format("%I:%M%P"));
         self.time = timestamp.to_string();
         println!("Alarm set for {}", human_time.to_string().blue());
-
-        fn guess_at_am_or_pm_period(usr_input: &str) -> NaiveTime {
-            let mut hours: String = usr_input.chars().filter(|c| c.is_numeric()).collect();
-            if hours.len() < 3 {
-                eprintln!("{} {}", usr_input, error(InvalidTime));
-                process::exit(1);
-            }
-            hours.truncate(hours.len() - 2);
-            let (hours, current_time): (u32, _) = (hours.parse().unwrap(), Local::now().hour());
-            let period = if hours >= current_time { "am" } else { "pm" };
-            let mut modified_usr_input = String::from(usr_input);
-            modified_usr_input.push_str(period);
-            let modified_usr_input = &modified_usr_input[..];
-            if let Ok(time) = NaiveTime::parse_from_str(modified_usr_input, "%I:%M%p") {
-                time
-            } else {
-                eprintln!("{} {}", usr_input, error(InvalidTime));
-                process::exit(1);
-            }
-        }
     }
 
     fn snooze(&mut self, cli_arguments: &clap::ArgMatches) {
@@ -106,4 +89,44 @@ impl AlarmSettings {
             human_time.to_string().blue()
         );
     }
+}
+
+fn guess_at_am_or_pm_period(usr_input: &str) -> NaiveTime {
+    let mut hours: String = usr_input.chars().filter(|c| c.is_numeric()).collect();
+    if hours.len() < 3 {
+        eprintln!("{} {}", usr_input, error(InvalidTime));
+        process::exit(1);
+    }
+    hours.truncate(hours.len() - 2);
+    let (input_hour, current_hour): (u32, _) = (hours.parse().unwrap(), Local::now().hour());
+    let am_pm = if input_hour >= current_hour && input_hour < 12 {
+        "am"
+    } else {
+        "pm"
+    };
+    let mut modified_usr_input = String::from(usr_input);
+    modified_usr_input.push_str(am_pm);
+    let modified_usr_input = &modified_usr_input[..];
+    if let Ok(time) = NaiveTime::parse_from_str(modified_usr_input, "%I:%M%p") {
+        time
+    } else {
+        eprintln!("{} {}", usr_input.red().bold(), error(InvalidTime));
+        process::exit(1);
+    }
+}
+
+fn parse_relative_time(usr_input: &str) -> NaiveTime {
+    use std::time::Duration;
+    let time_string = String::from(usr_input).split_off(1);
+    let duration: Duration = time_string
+        .parse::<humantime::Duration>()
+        .unwrap_or_else(|_| {
+            eprintln!("{} {}", usr_input.red().bold(), error(InvalidTime));
+            process::exit(1);
+        })
+        .into();
+
+    let time = Local::now() + chrono::Duration::seconds(duration.as_secs() as i64);
+
+    NaiveTime::from_hms(time.hour(), time.minute(), time.second())
 }
