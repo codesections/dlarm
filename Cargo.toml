@@ -2,7 +2,7 @@
 name = "dlarm"
 description = "the alarm system for dwm"
 repository = "https://github.com/codesections/dlarm"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Daniel Sockwell <dsockwell@gmail.com>"]
 edition = "2018"
 license = "MIT"
