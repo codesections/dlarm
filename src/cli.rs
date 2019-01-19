@@ -58,13 +58,13 @@ pub fn build_cli() -> App<'static, 'static> {
         )
 }
 
-pub struct Argument {
+pub struct ArgValues {
     pub name: &'static str,
     pub long: &'static str,
     pub short: &'static str,
     pub help: &'static str,
 }
-pub struct Option {
+pub struct OptValues {
     pub name: &'static str,
     pub long: &'static str,
     pub short: &'static str,
@@ -78,10 +78,10 @@ pub struct HeaderInfo {
 }
 pub struct CliText {
     pub app: HeaderInfo,
-    pub set: Option,
-    pub off: Argument,
-    pub snooze: Option,
-    pub message: Option,
+    pub set: OptValues,
+    pub off: ArgValues,
+    pub snooze: OptValues,
+    pub message: OptValues,
 }
 
 impl CliText {
@@ -91,7 +91,7 @@ impl CliText {
                 name: "dlarm",
                 description: "Sets an alarm to be displayed by dwm",
             },
-            set: Option {
+            set: OptValues {
                 name: "set",
                 long: "--set",
                 short: "-s",
@@ -99,13 +99,13 @@ impl CliText {
                 value_name: "TIME",
                 default_value: "",
             },
-            off: Argument {
+            off: ArgValues {
                 name: "off",
                 long: "--off",
                 short: "-o",
                 help: "Turns off the currently active alarm",
             },
-            snooze: Option {
+            snooze: OptValues {
                 name: "snooze",
                 long: "--snooze",
                 short: "-z",
@@ -113,7 +113,7 @@ impl CliText {
                 value_name: "MIN",
                 default_value: "",
             },
-            message: Option {
+            message: OptValues {
                 name: "message",
                 long: "--message",
                 short: "-m",
